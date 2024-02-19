@@ -1,8 +1,10 @@
+import LoginPage from "./login.jsx";
+
 function App() {
     return (
-        <div>
-            <p>Merge</p>
-        </div>
+        <>
+            <LoginPage />
+        </>
     )
 }
 export default App
