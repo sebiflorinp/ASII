@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      spacing: {
+        '128': '32rem',
+      },
       colors: {
         'green-dark': '#0A210F',
         'green-light': '#13591D',
