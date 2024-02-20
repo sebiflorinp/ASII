@@ -1,13 +1,21 @@
-import react, {useState} from "react";
+import {useState, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
+
+
 import "../index.css";
 
 function RegisterPage() {
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/api/v1/auth/users/me')
+            .then(response => response.json())
+            .then(data => console.log(data))
+    })
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [alergens, setAlergens] = useState("");
+    const [allergens, setAllergens] = useState("");
     const [dietary, setDietary] = useState("");
     const [height, setHeight] = useState();
     const [gender, setGender] = useState("");
@@ -33,8 +41,12 @@ function RegisterPage() {
     const handleSubmit = e => {
         e.preventDefault();
 
-        if (username === "" || password === "") {
-            setError("Username or Password cannot be empty");
+        if (confirmPassword !== password) {
+            setError("The passwords needs to be the same")
+        }
+
+        if (username === "" || password === "" || confirmPassword === "" || allergens === "" || dietary === "" || height === null || gender === "" || weight === null) {
+            setError("All fields needs to be filled");
         } else {
             // login logic stuff here
         }
@@ -61,7 +73,7 @@ function RegisterPage() {
                                    type="password"
                                    placeholder="Retype..."
                                    className="px-3 py-2 focus:outline focus:outline-1 bg-auth-green rounded-xl"/>
-                            <input value={alergens} onChange={(e) => setAlergens(e.target.value)}
+                            <input value={allergens} onChange={(e) => setAllergens(e.target.value)}
                                    placeholder="Alergens..."
                                    className="px-3 py-2 focus:outline focus:outline-1 bg-auth-green rounded-xl"/>
                             <input value={dietary} onChange={(e) => setDietary(e.target.value)}
@@ -71,9 +83,17 @@ function RegisterPage() {
                                    onChange={(e) => setHeight(e.target.value)} type="number"
                                    placeholder="Height in cm" max="250" min="100"
                                    className="appearance-none px-3 py-2 focus:outline focus:outline-1 bg-auth-green rounded-xl"/>
-                            <input value={gender} onChange={(e) => setGender(e.target.value)}
-                                   placeholder="M/F"
-                                   className="px-3 py-2 focus:outline focus:outline-1 bg-auth-green rounded-xl"/>
+
+                            {/*<input value={gender} onChange={(e) => setGender(e.target.value)}
+                                    placeholder="M/F"
+                                    className="px-3 py-2 focus:outline focus:outline-1 bg-auth-green rounded-xl"/>
+                            */}
+                            <select value={gender} onChange={(e) => setGender(e.target.value)}
+                                    className="appearance-none px-3 py-2 focus:outline focus:outline-1 bg-auth-green rounded-xl">
+                                <option className="text-opacity-50" value="">Select Gender</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
                         </div>
                         <input value={weight} onChange={(e) => setWeight(e.target.value)} type="number"
                                onKeyDown={preventLetters}

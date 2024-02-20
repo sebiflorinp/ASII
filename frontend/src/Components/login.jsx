@@ -1,26 +1,54 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 import "../index.css";
 
 function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [accessToken, setAccessToken] = useState("")
+    const [refreshToken, setRefreshToken] = useState("")
     const navigate = useNavigate();
 
     const handleReg = () => {
         navigate("/register");
     }
 
-    const handleSubmit = e => {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         if (username === "" || password === "") {
             setError("Username or Password cannot be empty");
         } else {
-            // login logic stuff here
+            fetch("http://127.0.0.1:8000/api/v1/auth/jwt/create/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                }),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`Failed to login. Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    const {access, refresh} = data;
+                    setAccessToken(access);
+                    setRefreshToken(refresh);
+                    navigate("/dashboard");
+                })
+                .catch((error) => {
+                    setError("Failed to login. Please check your credentials.");
+                    console.error("Login error:", error); // Log detailed error for debugging
+                });
         }
-    }
+    };
+
 
     return (
         <div className="h-screen bg-gradient-to-tr from-teal-400 to-teal-950 flex items-center justify-center relative">
@@ -53,7 +81,7 @@ function LoginPage() {
                                 className="rounded-full px-3 py-2 bg-back-1 text-green-dark text-opacity-50 font-bold focus:outline-none">Login
                         </button>
                         <button onClick={handleReg}
-                                className="w-32 rounded-full px-3 py-2 bg-back-1 text-green-dark text-opacity-50 font-bold focus:outline-none">Register
+                                className="rounded-full px-3 py-2 bg-back-1 text-green-dark text-opacity-50 font-bold focus:outline-none">Register
                             now
                         </button>
                     </form>
