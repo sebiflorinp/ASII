@@ -6,13 +6,12 @@ function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const [accessToken, setAccessToken] = useState("")
-    const [refreshToken, setRefreshToken] = useState("")
     const navigate = useNavigate();
 
     const handleReg = () => {
         navigate("/register");
     }
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -37,9 +36,12 @@ function LoginPage() {
                     return response.json();
                 })
                 .then((data) => {
-                    const {access, refresh} = data;
-                    setAccessToken(access);
-                    setRefreshToken(refresh);
+                    const {access, refresh} = data
+
+                    document.cookie = `access_token=${access}; path=/`;
+
+                    document.cookie = `access_token=${refresh}; path=/`;
+
                     navigate("/dashboard");
                 })
                 .catch((error) => {
@@ -55,6 +57,7 @@ function LoginPage() {
             <div className="w-128 h-128 bg-green-white flex items-center justify-center relative z-10 flex-shrink-0">
                 <div>
                     <h1 className="text-2xl font-bold text-center text-green-light pb-10">Welcome back!</h1>
+                    {/*<span>{refreshToken}</span>*/}
                     <form className="h-52 w-72 justify-center content-center flex flex-col space-y-5"
                           onSubmit={handleSubmit}>
                         <input value={username} onChange={(e) => setUsername(e.target.value)} type="text"

@@ -1,4 +1,3 @@
-import React from 'react';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import LoginPage from './Components/login.jsx';
 import RegisterPage from './Components/register.jsx';
