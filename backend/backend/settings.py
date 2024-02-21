@@ -40,6 +40,8 @@ INSTALLED_APPS = [
 
     'authentication',
 
+    'corsheaders',
+
     'rest_framework',
     'djoser'
 
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -148,3 +151,6 @@ DJOSER = {
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
     },
 }
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:4242',
+]
