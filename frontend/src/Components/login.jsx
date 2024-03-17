@@ -1,6 +1,7 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import "../index.css";
+import Cookies from "js-cookie";
 
 function LoginPage() {
     const [username, setUsername] = useState("");
@@ -36,12 +37,12 @@ function LoginPage() {
                     return response.json();
                 })
                 .then((data) => {
-                    const {access, refresh} = data
+                    const {access, refresh} = data;
 
-                    document.cookie = `access_token=${access}; path=/`;
-
-                    document.cookie = `access_token=${refresh}; path=/`;
-
+                    //document.cookie = `access_token=${access}; path=/`;
+                    Cookies.set('refresh_token', `${refresh}`, {expires: 7});
+                    Cookies.set('access_token', `${access}`, {expires: 7});
+                    // Redirect to dashboard upon successful login
                     navigate("/dashboard");
                 })
                 .catch((error) => {
